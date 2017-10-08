@@ -1,0 +1,7 @@
+.catalog:
+  name: "Unifi"
+  version: "0.3.0"
+  description: "Unifi Controller"
+  uuid: unifi-1
+unifi:
+  scale: 1
