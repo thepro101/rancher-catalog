@@ -11,8 +11,8 @@ services:
       - DEBUG=xo:main
       - NODE_ENV=production
       - XOA_PLAN=5
-    volumes:
-      - ./volumes/xo-server:/storage
+#    volumes:
+#      - ./volumes/xo-server:/storage
   redis:
     container_name: xoa-redis
     image: redis:alpine
