@@ -17,5 +17,5 @@ services:
     container_name: xoa-redis
     image: redis:alpine
     command: redis-server --appendonly yes
-    volumes:
-      - ./volumes/redis:/data
+#    volumes:
+#      - ./volumes/redis:/data
