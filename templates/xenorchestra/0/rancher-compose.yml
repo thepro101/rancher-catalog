@@ -1,0 +1,9 @@
+.catalog:
+  name: "XenOrchestra"
+  version: "0.1.0"
+  description: "XenOrchestra self hosted web app"
+  uuid: xenorchestra-0
+orchestra:
+  scale: 1
+redis:
+  scale: 1

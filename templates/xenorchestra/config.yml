@@ -1,0 +1,5 @@
+name: XenOrchestra
+description: XenOrchestra self-hosted web app
+version: 0.1.0
+category: Applications
+maintainer: Patrick Tully <patrick@ptzip.com>
