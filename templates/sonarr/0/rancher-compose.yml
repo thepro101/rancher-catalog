@@ -1,0 +1,9 @@
+.catalog:
+  name: "Sonarr"
+  version: "0.1.0"
+  description: "Smart PVR for newsgroup and bittorrent users."
+  uuid: sonarr-0
+sonarr:
+  scale: 1
+#transmission:
+#  scale: 1

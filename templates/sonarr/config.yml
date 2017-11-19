@@ -1,0 +1,5 @@
+name: Sonarr
+description: Smart PVR for newsgroup and torrent users
+version: 0.1.0
+category: Applications
+maintainer: Patrick Tully <patrick@ptzip.com>
