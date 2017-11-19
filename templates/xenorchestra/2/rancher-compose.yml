@@ -1,0 +1,22 @@
+.catalog:
+  name: "XenOrchestra"
+  version: "0.3.0"
+  description: "XenOrchestra self hosted web app"
+  uuid: xenorchestra-2
+  
+  questions:
+        - variable: "VOLUME_DRIVER"
+          description: "The VOLUME driver to associate with this server"
+          label: "VOLUME Driver"
+          required: true
+          default: "local"
+          type: enum
+          options:
+            - local
+            - rancher-nfs
+            - rancher-efs
+            - rancher-ebs          
+orchestra:
+  scale: 1
+redis:
+  scale: 1
