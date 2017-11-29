@@ -5,7 +5,7 @@ catalog:
   name: "Nextcloud"
   version: "0.3.0"
   description: "The Nextcloud self-hosted cloud suite"
-  uuid: nextcloud-0
+  uuid: nextcloud-1
   questions:
     - variable: NEXTCLOUD_PORT
       label: Port
