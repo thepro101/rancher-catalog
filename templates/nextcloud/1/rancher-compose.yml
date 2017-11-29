@@ -1,51 +1,146 @@
-version: '2'
-
-catalog:
-
+.catalog:
   name: "Nextcloud"
   version: "0.3.0"
-  description: "The Nextcloud self-hosted cloud suite"
-  uuid: nextcloud-1
+  description: distributed nextcloud setup
   questions:
-    - variable: NEXTCLOUD_PORT
-      label: Port
-      default: 80
-      required: true
-      type: int
-    - variable: MYSQL_ROOT_PASS
-      label: MySQL root password
-      required: true
-      type: password
-    - variable: MYSQL_DATABASE
-      default: nextcloud
-      label: MySQL Database
+    - variable: CUSTOMERDOMAIN
+      label: customer domain ($CUSTOMERDOMAIN.ftscloud.ch)
       required: true
       type: string
-    - variable: MYSQL_USER
-      default: nextcloud
-      label: MySQL User
+    - variable: MYSQLDB
+      label: mysql database for nextcloud
       required: true
       type: string
-    - variable: MYSQL_PASS
-      label: MySQL Pass
+      default: nextcloud
+    - variable: MYSQLUSER
+      label: mysql user for nextcloud
+      required: true
+      type: string
+      default: nextcloud
+    - variable: MYSQLPASS
+      label: mysql password for nextcloud db user
       required: true
       type: password
-
-services:
-
-  nextcloud:
-    scale: 1
-    start_on_create: true
-
-  nextcloud-data:
-    scale: 1
-    start_on_create: true
-
-  mariadb:
-    scale: 1
-    start_on_create: true
-
-  mariadb-data:
-    scale: 1
-    start_on_create: true
-
+    - variable: MYSQLROOTPASS
+      label: mysql password for root user
+      required: true
+      type: password
+    - variable: NEXTCLOUDUSER
+      label: username of the default nextcloud admin user
+      required: true
+      type: string
+      default: admin
+    - variable: NEXTCLOUDPASS
+      label: password for th default nextcloud admin user
+      required: true
+      type: password
+    - variable: NEXTCLOUDDATADIR
+      label: nextcloud data directory (inside the container)
+      required: true
+      type: string
+      default: /data
+    - variable: SMTPENABLED
+      label: use smtp email
+      required: false
+      type: string
+      default: true
+    - variable: SMTPFROM
+      label: from email address for nextcloud mails
+      required: false
+      type: string
+      default: nextcloud@ftscloud.ch
+    - variable: SMTPSECURE
+      label: encrypt connection
+      required: false
+      type: string
+      default: ssl
+    - variable: SMTPAUTH
+      label: use authentication ?
+      required: false
+      type: string
+      default: true
+    - variable: SMTPHOST
+      label: smtp mail server
+      required: false
+      type: string
+      default: asmtp.mail.hostpoint.ch
+    - variable: SMTPPORT
+      label: port for smtp connection
+      required: false
+      type: string
+      default: 465
+    - variable: SMTPPASS
+      label: password for from address
+      required: false
+      type: password
+    - variable: SMTPAUTHTYPE
+      label: smtp auth type
+      required: false
+      type: string
+      default: LOGIN
+    - variable: THEMINGBACKGROUNDURL
+      label: background image download url
+      description: download background image on start of container
+      required: true
+      type: string
+      default: https://downloads.ftsystems.ch/ftsCloud/images/background/ftsCloud-bg.png
+    - variable: THEMINGBACKGROUNDMIME
+      label: background image mime type
+      description: mime type of the background picture
+      required: true
+      type: string
+      default: image/png
+    - variable: THEMINGCOLOR
+      label: color for navigation (hex)
+      description: color used for navigation bars etc in hex
+      required: true
+      type: string
+      default: "#17196D"
+    - variable: THEMINGLOGOURL
+      label: logo download url
+      description: download logo image on start of container
+      required: true
+      type: string
+      default: https://downloads.ftsystems.ch/ftsCloud/images/customers/fts.png
+    - variable: THEMINGLOGOMIME
+      label: logo image mime type
+      description: mime type of the logo picture
+      required: true
+      type: string
+      default: image/png
+    - variable: THEMINGNAME
+      label: name in theme
+      description: name displayed on the bottom fo the login page
+      required: true
+      type: string
+      default: ftsCloud
+    - variable: THEMINGSLOGAN
+      label: slogan in theme
+      description: slogan displayed on the bottom fo the login page
+      required: true
+      type: string
+      default: der sichere Ort für Ihre Daten
+    - variable: THEMINGURL
+      label: url in theme
+      description: url the name link ppoints to
+      required: true
+      type: string
+      default: https://www.ftscloud.ch
+    - variable: PASSWORDNUMERIC
+      label: password policy - numeric characters (1 - enable, 0 - disable)
+      description: enforce numeric characters in passwords
+      required: true
+      type: string
+      default: "1"
+    - variable: PASSWORDUPPERLOWER
+      label: password policy - uppercase and lowercase
+      description: enforce mix of uppercase and lowercase characters (1 - enable, 0 - disable)
+      required: true
+      type: string
+      default: "1"
+    - variable: PASSWORDLENGTH
+      label: password policy - password length
+      description: enforce minimal password length
+      required: true
+      type: string
+      default: 8
