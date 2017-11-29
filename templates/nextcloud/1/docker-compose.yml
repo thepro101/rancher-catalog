@@ -1,39 +1,98 @@
 version: '2'
+volumes:
+  vol-database:
+    driver: nfs
+    driver_opts:
+      share: 192.168.2.171/mnt/TankSecure/Rancher/PTZip/nextcloud-vol-database
+  vol-redis:
+    driver: nfs
+    driver_opts:
+      share: 192.168.2.171/mnt/TankSecure/Rancher/PTZip/nextcloud-vol-redis
+  vol-nextlcoud-data:
+    driver: nfs
+    driver_opts:
+      share: 192.168.2.171/mnt/TankSecure/Rancher/PTZip/nextcloud-vol-data
+  vol-nextlcoud-config:
+    driver: nfs
+    driver_opts:
+      share: 192.168.2.171/mnt/TankSecure/Rancher/PTZip/nextcloud-vol-config
 services:
-  web:
-    image: tfenby/nginx-nextcloud
-    volumes:
-      - /docker/nc/nc-apps:/var/www/html/apps
-      - /docker/nc/nc-config:/var/www/html/config
-      - /docker/nc/nc-data:/var/www/html/data
-      - /docker/nc/nc-www:/var/www/html
-  app:
-    image: nextcloud:11-fpm
-    volumes:
-      - /docker/nc/nc-apps:/var/www/html/apps
-      - /docker/nc/nc-config:/var/www/html/config
-      - /docker/nc/nc-data:/var/www/html/data
-      - /docker/nc/nc-www:/var/www/html
-    environment:
-      NC_FQDN: ${FQDN}
   db:
-    image: mysql
-    volumes:
-      - /docker/nc/mysql-data:/var/lib/mysql
+    image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: ${ROOTPASSWORD}
-  cron:
-    image: nextcloud:11-fpm
+      MYSQL_ROOT_PASSWORD: ${MYSQLROOTPASS}
+      MYSQL_DATABASE: ${MYSQLDB}
+      MYSQL_USER: ${MYSQLUSER}
+      MYSQL_PASSWORD: ${MYSQLPASS}
     volumes:
-      - /docker/nc/nc-apps:/var/www/html/apps
-      - /docker/nc/nc-config:/var/www/html/config
-      - /docker/nc/nc-data:/var/www/html/data
-    user: www-data
-    entrypoint: |
-      bash -c 'bash -s <<EOF
-      trap "break;exit" SIGHUP SIGINT SIGTERM
-      while /bin/true; do
-        /usr/local/bin/php /var/www/html/cron.php
-        sleep 900
-      done
-      EOF'
+      - vol-database:/var/lib/mysql
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: 5
+    labels:
+      io.rancher.container.pull_image: always
+  redis:
+    image: redis:3.2
+    volumes:
+      - vol-redis:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: 5
+    labels:
+      io.rancher.container.pull_image: always
+  nextcloud:
+    image: ftsystems/nextcloud:12.0.3-latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      NEXTCLOUD_CONFIG_CONFIGURE: yes
+      NEXTCLOUD_CONFIG_ADMIN_USER: ${NEXTCLOUDUSER}
+      NEXTCLOUD_CONFIG_ADMIN_PASSWORD: ${NEXTCLOUDPASS}
+      NEXTCLOUD_CONFIG_DATADIR: ${NEXTCLOUDDATADIR}
+      NEXTCLOUD_CONFIG_DB_TYPE: mysql
+      NEXTCLOUD_CONFIG_DB_HOST: db
+      NEXTCLOUD_CONFIG_DB_PORT: 3306
+      NEXTCLOUD_CONFIG_DB_NAME: ${MYSQLDB}
+      NEXTCLOUD_CONFIG_DB_USER: ${MYSQLUSER}
+      NEXTCLOUD_CONFIG_DB_PASSWORD: ${MYSQLPASS}
+      NEXTCLOUD_CONFIG_TRUSTEDDOMAIN: ${CUSTOMERDOMAIN}.ftscloud.ch
+      NEXTCLOUD_CONFIG_CACHE_APCU_ENABLE: true
+      NEXTCLOUD_CONFIG_CACHE_REDIS_ENABLE: true
+      NEXTCLOUD_CONFIG_CACHE_REDIS_HOST: redis
+      NEXTCLOUD_CONFIG_CACHE_REDIS_PORT: 6379
+      NEXTCLOUD_CONFIG_PHP_SESSION_SAVEHANDLER: redis
+      NEXTCLOUD_CONFIG_PHP_SESSION_SAVEPATH: tcp://redis:6379?database=0
+      NEXTCLOUD_CONFIG_SMTP_ENABLED: ${SMTPENABLED}
+      NEXTCLOUD_CONFIG_SMTP_FROM: ${SMTPFROM}
+      NEXTCLOUD_CONFIG_SMTP_SECURE: ${SMTPSECURE}
+      NEXTCLOUD_CONFIG_SMTP_AUTH: ${SMTPAUTH}
+      NEXTCLOUD_CONFIG_SMTP_HOST: ${SMTPHOST}
+      NEXTCLOUD_CONFIG_SMTP_PORT: ${SMTPPORT}
+      NEXTCLOUD_CONFIG_SMTP_PASS: ${SMTPPASS}
+      NEXTCLOUD_CONFIG_SMTP_AUTHTYPE: ${SMTPAUTHTYPE}
+      NEXTCLOUD_CONFIG_THEMING_BACKGROUNDURL: ${THEMINGBACKGROUNDURL}
+      NEXTCLOUD_CONFIG_THEMING_BACKGROUNDMIME: ${THEMINGBACKGROUNDMIME}
+      NEXTCLOUD_CONFIG_THEMING_COLOR: ${THEMINGCOLOR}
+      NEXTCLOUD_CONFIG_THEMING_LOGOURL: ${THEMINGLOGOURL}
+      NEXTCLOUD_CONFIG_THEMING_LOGOMIME: ${THEMINGLOGOMIME}
+      NEXTCLOUD_CONFIG_THEMING_NAME: ${THEMINGNAME}
+      NEXTCLOUD_CONFIG_THEMING_SLOGAN: ${THEMINGSLOGAN}
+      NEXTCLOUD_CONFIG_THEMING_URL: ${THEMINGURL}
+      NEXTCLOUD_CONFIG_PASSWORD_NUMERIC: ${PASSWORDNUMERIC}
+      NEXTCLOUD_CONFIG_PASSWORD_UPPERLOWER: ${PASSWORDUPPERLOWER}
+      NEXTCLOUD_CONFIG_PASSWORD_MINLENGTH: ${PASSWORDLENGTH}
+    volumes:
+      - vol-nextlcoud-config:/var/www
+      - vol-nextlcoud-data:${NEXTCLOUDDATADIR}
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: 5
+    labels:
+      io.rancher.container.pull_image: always
