@@ -1,15 +1,16 @@
 version: '2'
 services:
   flood:
-    image: ezka77/xen-orchestra-ce
-    container_name: xoa
+    image: romancin/rutorrent-flood:latest
+    container_name: rutorrent-flood
     ports:
-      - "8000:80"
-    depends_on:
-      - redis
+      - ${PORT1}:443
+      - ${PORT2}:3000
+      - ${PORT3}:51415-51415
     environment:
-      - DEBUG=xo:main
-  redis:
-    container_name: xoa-redis
-    image: redis:alpine
-    command: redis-server --appendonly yes
+      - PGID=0
+      - PUID=0
+      - TZ=${TIMEZONE}
+    volumes:
+      - /data/config:/config
+      - /data/downloads:/downloads

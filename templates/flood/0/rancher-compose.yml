@@ -3,5 +3,30 @@
   version: "0.1.0"
   description: "Flood is another web interface for rtorrent"
   uuid: flood-0
+  questions: 
+    - variable: "PORT1"
+      label: "Web SSL Access"
+      description: "SSL rutorrent access"
+      default: 9443
+      required: true
+      type: "int"
+    - variable: "PORT2"
+      label: "SSL Flood"
+      description: "Flood service port"
+      default: 3000
+      required: true
+      type: "int"
+    - variable: "PORT3"
+      label: "rutorrent port"
+      description: "rutorrent service port"
+      required: true
+      default: 51415-51415
+      type: "int"
+    - variable: "TZ"
+      label: "Timezone"
+      description: ""
+      required: true
+      default: "America/New_York"
+      type: "string"  
 flood:
   scale: 1
