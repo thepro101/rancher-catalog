@@ -1,0 +1,7 @@
+.catalog:
+  name: "Flood"
+  version: "0.1.0"
+  description: "Flood is another web interface for rtorrent"
+  uuid: flood-0
+flood:
+  scale: 1

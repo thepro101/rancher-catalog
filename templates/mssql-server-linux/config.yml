@@ -1,0 +1,5 @@
+name: mssql-server-linux
+description: Microsoft SQL Server on Linux
+version: 0.1.0
+category: Applications
+maintainer: Patrick Tully <patrick@ptzip.com>

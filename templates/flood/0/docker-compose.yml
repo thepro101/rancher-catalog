@@ -1,0 +1,15 @@
+version: '2'
+services:
+  flood:
+    image: ezka77/xen-orchestra-ce
+    container_name: xoa
+    ports:
+      - "8000:80"
+    depends_on:
+      - redis
+    environment:
+      - DEBUG=xo:main
+  redis:
+    container_name: xoa-redis
+    image: redis:alpine
+    command: redis-server --appendonly yes

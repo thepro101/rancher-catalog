@@ -1,0 +1,7 @@
+.catalog:
+  name: "mssql-server-linux"
+  version: "0.1.0"
+  description: ""
+  uuid: mssql-server-linux-0
+mssql:
+  scale: 1
